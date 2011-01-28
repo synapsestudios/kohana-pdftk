@@ -26,7 +26,7 @@ class Synapse_Pdftk {
 			$output_filename = Pdftk::unique_filename('pdf');
 
 			$pdftk = Kohana::config('pdf.pdftk.path');
-			if ($pdftk === FALSE)
+			if ($pdftk == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect Pdftk path. Set config \'pdf.pdftk.path\''.' for this environment.');
 			}
@@ -99,7 +99,7 @@ class Synapse_Pdftk {
 			$output_filename = Pdftk::unique_filename('pdf');
 
 			$pdftk = Kohana::config('pdf.pdftk.path');
-			if ($pdftk === FALSE)
+			if ($pdftk == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect Pdftk path. Set config \'pdf.pdftk.path\''.' for this environment.');
 			}
@@ -227,9 +227,8 @@ class Synapse_Pdftk {
 		{
 			$pdf_filename = Pdftk::unique_filename('pdf');
 
-			$wkhtmltopdf = realpath(Kohana::config('pdf.wkhtmltopdf.path'));
-
-			if ($wkhtmltopdf === FALSE)
+			$wkhtmltopdf = Kohana::config('pdf.wkhtmltopdf.path');
+			if ($wkhtmltopdf == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect wkhtmltopdf path. Set config \'pdf.wkhtmltopdf.path\''.' for this environment.');
 			}
@@ -295,7 +294,7 @@ class Synapse_Pdftk {
 			$output_filename = Pdftk::unique_filename('pdf');
 
 			$pdftk = Kohana::config('pdf.pdftk.path');
-			if ($pdftk === FALSE)
+			if ($pdftk == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect Pdftk path. Set config \'pdf.pdftk.path\''.' for this environment.');
 			}
