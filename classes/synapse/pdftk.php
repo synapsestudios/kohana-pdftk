@@ -26,7 +26,7 @@ class Synapse_Pdftk {
 			$output_filename = Pdftk::unique_filename('pdf');
 
 			$pdftk = Kohana::config('pdf.pdftk.path');
-			if ($pdftk === FALSE)
+			if ($pdftk == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect Pdftk path. Set config \'pdf.pdftk.path\''.' for this environment.');
 			}
@@ -83,7 +83,7 @@ class Synapse_Pdftk {
 		try
 		{
 			$pages = array();
-			
+
 			foreach ($input as $key => $i)
 			{
 				if (is_int($key))
@@ -95,11 +95,11 @@ class Synapse_Pdftk {
 					$pages[$key] = Pdftk::parse_input($i);
 				}
 			}
-			
+
 			$output_filename = Pdftk::unique_filename('pdf');
 
 			$pdftk = Kohana::config('pdf.pdftk.path');
-			if ($pdftk === FALSE)
+			if ($pdftk == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect Pdftk path. Set config \'pdf.pdftk.path\''.' for this environment.');
 			}
@@ -198,14 +198,14 @@ class Synapse_Pdftk {
 			try
 			{
 				$html_filename = Pdftk::unique_filename('html');
-		
+
 				$written = file_put_contents($html_filename, $html);
 
 				if ( ! $written)
 				{
 					throw new RuntimeException('Unable to write to file '.$html_filename);
 				}
-				
+
 				$html_files[] = $html_filename;
 				unset($html);
 			}
@@ -227,9 +227,8 @@ class Synapse_Pdftk {
 		{
 			$pdf_filename = Pdftk::unique_filename('pdf');
 
-			$wkhtmltopdf = realpath(Kohana::config('pdf.wkhtmltopdf.path'));
-
-			if ($wkhtmltopdf === FALSE)
+			$wkhtmltopdf = Kohana::config('pdf.wkhtmltopdf.path');
+			if ($wkhtmltopdf == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect wkhtmltopdf path. Set config \'pdf.wkhtmltopdf.path\''.' for this environment.');
 			}
@@ -295,12 +294,12 @@ class Synapse_Pdftk {
 			$output_filename = Pdftk::unique_filename('pdf');
 
 			$pdftk = Kohana::config('pdf.pdftk.path');
-			if ($pdftk === FALSE)
+			if ($pdftk == FALSE)
 			{
 				throw new RuntimeException('Unconfigured or incorrect Pdftk path. Set config \'pdf.pdftk.path\''.' for this environment.');
 			}
 
-			$command = escapeshellarg($pdftk).' 2>&1 '.escapeshellarg($background).' multistamp '.escapeshellarg($foreground).' output '.escapeshellarg($output_filename);
+			$command = escapeshellarg($pdftk).' 2>&1 '.escapeshellarg($background).' stamp '.escapeshellarg($foreground).' output '.escapeshellarg($output_filename);
 
 			ob_start();
 			$last_line = system($command, $return);
@@ -356,7 +355,7 @@ class Synapse_Pdftk {
 				return $input;
 			}
 		}
-		elseif ($input instanceof Kostache OR $input instanceof View OR is_array($input))
+		elseif ($input instanceof Kostache OR $input instanceof View)
 		{
 			return Pdftk::render_pdf($input);
 		}
