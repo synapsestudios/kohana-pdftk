@@ -173,12 +173,31 @@ class Synapse_Pdftk {
 	}
 
 	/**
-	 * Takes a Kostache object and creates a PDF using wkhtmltopdf
+	 * Takes a Kostache object or array of objects and creates a PDF using
+	 * wkhtmltopdf
 	 *
-	 * @param Kostache $template
+	 * The second param is an array that can have any of the options listed in
+	 * `wkhtmltopdf --extended-help` and will be printed as `--<key> <value>`
+	 * For params with no options, set value to TRUE, for params with one
+	 * option, set it as the value, for params with two or more options, pass
+	 * an array as the value, for repeatable params, pass an array of key value
+	 * pairs.
+	 * 
+	 * For example
+	 *
+	 * array(
+	 *  'toc' => TRUE, // Set value as true for args with no option, eg --toc
+	 * 	'copies' => '2',
+	 * );
+	 *
+	 * Note: some elements are treated special, such as replace, see
+	 * the code for more info on them
+	 * 
+	 * @param Kostache $template or array of Kostache objects
+	 * @param Array Array of options for the renderer
 	 * @return string $pdf_filename path the the pdf file
 	 */
-	public static function render_pdf($pages = array())
+	public static function render_pdf($pages = array(), $options = array())
 	{
 		// Get input in correct format
 		if ( ! is_array($pages))
@@ -234,12 +253,49 @@ class Synapse_Pdftk {
 			}
 
 			$command = escapeshellarg($wkhtmltopdf).' 2>&1 ';
+			
+			// Add options from the options array
+			foreach ($options as $key => $value)
+			{
+				// Check for any keys that need special treatment
+				if ($key == 'replace')
+				{
+					// For replace the value is an array of search => replace pairs
+					foreach ($value as $search => $replace)
+					{
+						$command .= '--'.$key.' '.escapeshellarg($search).' '.escapeshellarg($replace).' ';
+					}
+				}
+				// To other developers: If you need to add special treatment for any params, put them above this line
+				// Standard params of 0, 1 and 2+ options below here
+				elseif ($value === TRUE)
+				{
+					// Standard param with no options
+					$command .= '--'.$key.' ';
+				}
+				elseif (is_array($value))
+				{
+					// Standard param with 2 or more options, eg --replace <name> <value>
+					$command .= '--'.$key.' ';
+					foreach($value as $param)
+					{
+						$command .= escapeshellarg($param).' ';
+					}
+				}
+				else
+				{
+					// Standard param with one option eg --key <value>
+					$command .= '--'.$key.' '.escapeshellarg($value).' ';
+				}
+			}
 
+			// Add input files to the command
 			foreach ($html_files as $filename)
 			{
 				$command .= escapeshellarg($filename).' ';
 			}
 
+			// Add output file to the command
 			$command .= escapeshellarg($pdf_filename);
 
 			ob_start();
@@ -260,12 +316,12 @@ class Synapse_Pdftk {
 		}
 		catch (Exception $e)
 		{
-			Kohana::$log->add(Kohana::ERROR, 'Problem generating PDF. '.$e);
+			Kohana::$log->add(Log::ERROR, 'Problem generating PDF. '.$e);
 
 			// Throw a PDF_Exception rather than a generic Exception
 			if (get_class($e) !== 'pdf_exception')
 			{
-				throw new PDF_Exception('PDF generation error', 0, $e);
+				throw new PDF_Exception('PDF generation error'.$e->getMessage() , 0, $e);
 			}
 			else
 			{
