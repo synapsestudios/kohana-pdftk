@@ -178,7 +178,7 @@ class Synapse_Pdftk {
 	 * @param Kostache $template
 	 * @return string $pdf_filename path the the pdf file
 	 */
-	public static function render_pdf($pages = array())
+	public static function render_pdf($pages = array(), $transparent = FALSE)
 	{
 		// Get input in correct format
 		if ( ! is_array($pages))
@@ -234,6 +234,11 @@ class Synapse_Pdftk {
 			}
 
 			$command = escapeshellarg($wkhtmltopdf).' 2>&1 ';
+
+			if ($transparent)
+			{
+				$command .= '--no-background ';
+			}
 
 			foreach ($html_files as $filename)
 			{
