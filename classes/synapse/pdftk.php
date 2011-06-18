@@ -56,8 +56,6 @@ class Synapse_Pdftk {
 		}
 		catch (Exception $e)
 		{
-			Kohana::$log->add(Kohana::ERROR, 'Problem generating PDF. '.$e);
-
 			// Throw a PDF_Exception rather than a generic Exception
 			if (get_class($e) !== 'pdf_exception')
 			{
@@ -156,8 +154,6 @@ class Synapse_Pdftk {
 		}
 		catch (Exception $e)
 		{
-			Kohana::$log->add(Kohana::ERROR, 'Problem generating PDF. '.$e);
-
 			// Throw a PDF_Exception rather than a generic Exception
 			if (get_class($e) !== 'pdf_exception')
 			{
@@ -316,8 +312,6 @@ class Synapse_Pdftk {
 		}
 		catch (Exception $e)
 		{
-			Kohana::$log->add(Log::ERROR, 'Problem generating PDF. '.$e);
-
 			// Throw a PDF_Exception rather than a generic Exception
 			if (get_class($e) !== 'pdf_exception')
 			{
@@ -392,8 +386,6 @@ class Synapse_Pdftk {
 		}
 		catch (Exception $e)
 		{
-			Kohana::$log->add(Kohana::ERROR, 'Problem generating PDF. '.$e);
-
 			// Throw a PDF_Exception rather than a generic Exception
 			if (get_class($e) !== 'pdf_exception')
 			{
