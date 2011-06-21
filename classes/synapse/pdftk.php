@@ -193,7 +193,7 @@ class Synapse_Pdftk {
 	 * @param Array Array of options for the renderer
 	 * @return string $pdf_filename path the the pdf file
 	 */
-	public static function render_pdf($pages = array(), $options = array())
+	public static function render_pdf($pages = array(), $options = array(), $version = FALSE)
 	{
 		// Get input in correct format
 		if ( ! is_array($pages))
@@ -248,8 +248,15 @@ class Synapse_Pdftk {
 				throw new RuntimeException('Unconfigured or incorrect wkhtmltopdf path. Set config \'pdf.wkhtmltopdf.path\''.' for this environment.');
 			}
 
-			$command = escapeshellarg($wkhtmltopdf).' 2>&1 ';
-			
+			if ($version)
+			{
+				$command = escapeshellarg($version).' 2>&1 ';
+			}
+			else
+			{
+				$command = escapeshellarg($wkhtmltopdf).' 2>&1 ';
+			}
+
 			// Add options from the options array
 			foreach ($options as $key => $value)
 			{
@@ -334,7 +341,7 @@ class Synapse_Pdftk {
 	 * @param mixed $file_b The background file
 	 * @return string pdf The stamped PDF
 	 */
-	public static function stamp($file_a, $file_b, $options = array())
+	public static function stamp($file_a, $file_b, $options = array(), $wkhtmltopdf_version = FALSE)
 	{
 		try
 		{
@@ -350,8 +357,8 @@ class Synapse_Pdftk {
 				$options_b = $options[1];
 			}
 
-			$foreground = Pdftk::parse_input($file_a, $options_a);
-			$background = Pdftk::parse_input($file_b, $options_b);
+			$foreground = Pdftk::parse_input($file_a, $options_a, $wkhtmltopdf_version);
+			$background = Pdftk::parse_input($file_b, $options_b, $wkhtmltopdf_version);
 
 			$output_filename = Pdftk::unique_filename('pdf');
 
